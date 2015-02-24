@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+chmod +x $DIR/bashful-messages >/dev/null 2>&1
+. bashful-messages
+
+info "Updating Homebrew Formulae definitions"
+brew update
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Updating Homebrew formulae definitions failed."
+fi
+
+info "Upgrading Homebrew installation"
+brew upgrade
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Upgrading Homebrew formulae failed."
+fi
+
+info "Pruning Homebrew installation"
+brew prune
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Pruning Homebrew installation failed."
+fi
+
+info "Cleaning up Homebrew caches"
+brew cleanup
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Cleaning up Homebrew caches failed."
+fi
+
+info "Optimizing Homebrew installation"
+cd /usr/local >/dev/null 2>&1
+git gc
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Optimizing Homebrew installation failed."
+fi
+
+info "Optimizing Homebrew taps"
+cd /usr/local/Library/Taps >/dev/null 2>&1
+for dir in ./*; do
+    if test -d "$dir"; then
+        cd dir >/dev/null 2>&1
+        git gc
+        cd .. >/dev/null 2>&1
+    fi
+done
+updateresult=$?
+if [ $updateresult != 0 ]; then
+	tput cuu1; tput el
+	warn "Optimizing Homebrew taps failed."
+fi
