@@ -35,27 +35,3 @@ if [ $updateresult != 0 ]; then
 	tput cuu1; tput el
 	warn "Cleaning up Homebrew caches failed."
 fi
-
-info "Optimizing Homebrew installation"
-cd /usr/local >/dev/null 2>&1
-git gc
-updateresult=$?
-if [ $updateresult != 0 ]; then
-	tput cuu1; tput el
-	warn "Optimizing Homebrew installation failed."
-fi
-
-info "Optimizing Homebrew taps"
-cd /usr/local/Library/Taps >/dev/null 2>&1
-for dir in ./*; do
-    if test -d "$dir"; then
-        cd dir >/dev/null 2>&1
-        git gc
-        cd .. >/dev/null 2>&1
-    fi
-done
-updateresult=$?
-if [ $updateresult != 0 ]; then
-	tput cuu1; tput el
-	warn "Optimizing Homebrew taps failed."
-fi
