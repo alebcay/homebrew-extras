@@ -13,7 +13,7 @@ if [ $updateresult != 0 ]; then
 fi
 
 info "Upgrading Homebrew installation"
-brew upgrade
+brew upgrade --all
 updateresult=$?
 if [ $updateresult != 0 ]; then
 	tput cuu1; tput el
